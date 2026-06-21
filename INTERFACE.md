@@ -1,9 +1,8 @@
 # Algos executor — interface
 
-The executor is a **Python CLI**, invoked as a module today and as a console
-script (`atlas-algos`) once installed. The Go CLI will wrap these same two
-commands later (`integer-atlas compute` / `verify` shell out to this). It is
-**stateless**: every run is a pure function of its input manifest.
+The executor is a **Python CLI** (`atlas-algos`), runnable as a console script once
+installed or as `python3 -m integer_atlas_algos.executor`. It is **stateless**: every
+run is a pure function of its input manifest.
 
 ```
 atlas-algos compute --manifest <work-order.json> --out <shard> [options]

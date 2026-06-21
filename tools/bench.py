@@ -1,8 +1,7 @@
 """Benchmark reference implementations of candidate properties at a sample n.
 
 Prints: column<TAB>big-O<TAB>per-call microseconds (best of 5 autorange runs).
-These are pure-Python reference timings on one machine — indicative only, meant
-to seed the planner's cost model, not to be frozen into method metadata.
+These are pure-Python timings on one machine — indicative only.
 """
 import math
 import sys

@@ -1,8 +1,6 @@
 # Integer Atlas — Algos
 
-> Directory name is provisional and will be renamed later.
-
-The property methods and the compute engine (the executor). This repository is **independent and stateless**: nothing here imports the other repos, and it stores no information about any shard, pack, release, or lifecycle. It is used exactly twice per shard — `compute` (by a contributor) and `verify` (by a maintainer). Master design: [`../Integer Atlas Documentation.docx.md`](../Integer%20Atlas%20Documentation.docx.md) (§16, §11, §17, §2.5).
+The property methods and the compute engine (the executor). This repository is **independent and stateless**: nothing here imports the other repos, and it stores no information about any shard, pack, release, or lifecycle. It is used exactly twice per shard — `compute` (by a contributor) and `verify` (by a maintainer).
 
 ## Purpose
 
@@ -12,7 +10,7 @@ The property methods and the compute engine (the executor). This repository is *
 
 ## What lives here
 
-Algorithms are a **single flat directory** — one method per file, the filename matching the column it produces. Pack, shard, and release names never appear in the layout. Shared helpers live in `_lib`. There are no pack, coverage, or planner files here — those belong to the Shards repo.
+Algorithms are a **single flat directory** — one method per file, the filename matching the column it produces. Pack, shard, and release names never appear in the layout. Shared helpers live in `_lib`. There are no work-order or manifest files here — those live in the Shards repository.
 
 ```
 integer_atlas_algos/        the installable package (atlas-algos)
@@ -40,9 +38,9 @@ COMMANDS.md  INTERFACE.md  PUBLISHING.md   reference docs
 ```
 
 Run it with `pip install -e .` then `atlas-algos …`, or from a source checkout as
-`python3 -m integer_atlas_algos.executor …` (run from the `algos/` directory).
+`python3 -m integer_atlas_algos.executor …` (run from the repository root).
 
-All 46 agreed properties are implemented. See [INTERFACE.md](INTERFACE.md) for the
+All 46 properties are implemented. See [INTERFACE.md](INTERFACE.md) for the
 complete command reference, output layout, exit codes, and the resume model.
 
 ## Precomputed data
@@ -53,16 +51,13 @@ BOUND = 31623 (≥ √1e9) that is ~3401 primes covering the whole 0..1e9 range.
 (sieved on first use if missing), not state about any shard or pack. It bounds
 worst-case factorization to ~3401 trial divisions regardless of n's size in range.
 
-## Status and known limitations
+## Limitations
 
-Done and tested: 46 properties, the stateless executor (compute/verify/estimate,
-resumable + atomic + streaming finalize), CSV and **validated Parquet** backends,
-SHA256/SHA512/BLAKE3 hashing. Remaining performance work (not correctness):
-per-shard run is single-threaded pure Python (~3700 rows/s/core — scale by running
-many shards in parallel, one executor each); a segmented-sieve batch fast-path and
-gmpy2 would speed factorization further; `n` is int64 (covers 0..2^63, hence the
-0..1e9 target) — int128 only needed beyond that; `partition_count` is small-n only
-(its values explode) even though its per-row recompute is now memoized.
+- A single shard is computed single-threaded (~3,700 rows/s/core in pure Python);
+  scale by computing many shards concurrently, one process each.
+- `n` is stored as int64 (covers 0..2^63).
+- `partition_count` is practical only for small n — its values grow to hundreds of
+  digits — so omit it from large ranges.
 
 ## Method contract
 
@@ -85,12 +80,19 @@ Cut an algorithm release once enough methods have merged. It is stamped with the
 
 ## Packaging
 
-Distributed with **uv**: each release pins `uv.lock`, so `integer-atlas algos sync` (from the CLI) materializes the exact released code and dependencies on any platform — fast, reproducible, no system Python required. Optional PyInstaller one-file artifacts and an OCI image are conveniences; uv is canonical. Compute speed comes from native math libraries (e.g. gmpy2, primesieve) and the vectorized fast-paths, not from the packaging format.
+Published to PyPI as `integer-atlas-algos`; install with `pip install integer-atlas-algos`
+(add the `parquet` extra for Parquet output, `hash` for the native BLAKE3 speedup).
+Factorization speed comes from the precomputed prime table; native libraries
+(gmpy2, primesieve) and a column's optional vectorized fast-path can speed it further.
 
 ## State: none
 
-This repo stores no state about any shard, pack, release, or lifecycle. Planning, pack definitions, the coverage policy, and the manifest sets all live in the Shards repo. Algos sees a given shard exactly twice — `compute` (contributor) and `verify` (maintainer).
+This repository stores no information about any shard, release, or lifecycle — work
+orders and manifests live in the Shards repository. The executor sees a given shard
+exactly twice: `compute` (by a contributor) and `verify` (by a maintainer).
 
 ## Contributing
 
-PRs add algorithms (the code pipeline). Include the method, its metadata, and its test vectors. See §10.1 and §17 in the master doc.
+Add an algorithm by dropping a file in `properties/` (one method per file) with its
+metadata and test vectors, then open a pull request. See [INTERFACE.md](INTERFACE.md)
+for the method contract.
