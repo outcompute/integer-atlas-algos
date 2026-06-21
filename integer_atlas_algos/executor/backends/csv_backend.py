@@ -1,5 +1,9 @@
-"""Stdlib CSV backend. Deterministic output; types coerced via the schema."""
+"""Stdlib CSV backend. Deterministic output; types coerced via the schema.
+
+List columns (dtype ending in "[]") are stored as a JSON array in one CSV field.
+"""
 import csv
+import json
 
 EXT = ".csv"
 COMPRESSION = "none"
@@ -8,6 +12,8 @@ COMPRESSION = "none"
 def _fmt(v, dtype):
     if dtype == "bool":
         return "true" if v else "false"
+    if dtype.endswith("[]"):
+        return json.dumps(v)
     return str(v)
 
 
@@ -18,6 +24,8 @@ def _parse(s, dtype):
         return float(s)
     if dtype == "string":
         return s
+    if dtype.endswith("[]"):
+        return json.loads(s)
     return int(s)  # int*, uint*, and bigint (Python ints are unbounded)
 
 

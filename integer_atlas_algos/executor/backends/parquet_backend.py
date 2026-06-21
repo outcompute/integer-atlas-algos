@@ -1,7 +1,8 @@
 """Parquet backend (pyarrow). The real shard format.
 
 Exercised only when pyarrow is installed; the control flow it plugs into is
-covered by the CSV-backed tests.
+covered by the CSV-backed tests. A dtype ending in "[]" (e.g. "uint64[]") becomes a
+native Arrow list column.
 """
 EXT = ".parquet"
 COMPRESSION = "zstd"
@@ -26,7 +27,8 @@ def _rows_to_table(schema, rows):
     for r in rows:
         for n, dt in schema:
             cols[n].append(str(r[n]) if dt == "bigint" else r[n])
-    arrays = [pa.array(cols[n], type=t[dt]) for n, dt in schema]
+    arrays = [pa.array(cols[n], type=(pa.list_(t[dt[:-2]]) if dt.endswith("[]") else t[dt]))
+              for n, dt in schema]
     return pa.table(arrays, names=[n for n, _ in schema])
 
 

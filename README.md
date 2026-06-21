@@ -16,7 +16,7 @@ Algorithms are a **single flat directory** — one method per file, the filename
 integer_atlas_algos/        the installable package (atlas-algos)
   registry.py               @property_method + the flat column registry
   context.py                per-n memoized context (factorization, divisors)
-  properties/               one method per file; filename = column name (46 columns)
+  properties/               one method per file; filename = column name (47 columns)
   _lib/                     shared helpers
     factorization.py        prime-table factorization
     multiplicative.py       sigma() shared by divisor functions
@@ -34,13 +34,13 @@ integer_atlas_algos/        the installable package (atlas-algos)
 tools/                      bench.py, perfrun.py, make_work_order.py (dev only)
 tests/                      unittest suite + sample work-order manifests
 pyproject.toml              package metadata, console script, extras
-COMMANDS.md  INTERFACE.md  PUBLISHING.md   reference docs
+COMMANDS.md  INTERFACE.md           reference docs
 ```
 
 Run it with `pip install -e .` then `atlas-algos …`, or from a source checkout as
 `python3 -m integer_atlas_algos.executor …` (run from the repository root).
 
-All 46 properties are implemented. See [INTERFACE.md](INTERFACE.md) for the
+All 47 properties are implemented. See [INTERFACE.md](INTERFACE.md) for the
 complete command reference, output layout, exit codes, and the resume model.
 
 ## Precomputed data
