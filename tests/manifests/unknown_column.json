@@ -1,0 +1,7 @@
+{
+  "id": "unknown-column",
+  "start": 1,
+  "end": 10,
+  "columns": ["is_even", "does_not_exist"],
+  "algorithm_release": "algos-0.0.1"
+}

@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "integer-atlas-algos"
+description = "Integer Atlas — stateless property methods and shard executor"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+keywords = ["number-theory", "integers", "dataset", "parquet", "shards"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Operating System :: OS Independent",
+]
+dependencies = []
+dynamic = ["version"]
+
+[project.optional-dependencies]
+# Real shard format (the CSV backend is dependency-free).
+parquet = ["pyarrow>=15"]
+# Faster verification hashing (a pure-Python BLAKE3 fallback ships otherwise).
+hash = ["blake3>=0.4"]
+dev = ["pytest>=8"]
+
+[project.scripts]
+atlas-algos = "integer_atlas_algos.executor.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/outcompute/integer-atlas-algos"
+Source = "https://github.com/outcompute/integer-atlas-algos"
+
+[tool.hatch.version]
+path = "integer_atlas_algos/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["integer_atlas_algos"]
+# Ship the precomputed base-primes table so installs don't re-sieve on first use.
+artifacts = ["integer_atlas_algos/precomputed/*.txt"]
+
+[tool.hatch.build.targets.sdist]
+include = ["integer_atlas_algos", "tests", "tools", "*.md", "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

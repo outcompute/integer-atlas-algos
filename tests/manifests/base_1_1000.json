@@ -1,0 +1,7 @@
+{
+  "id": "base-1-1000",
+  "start": 1,
+  "end": 1000,
+  "columns": ["sign", "abs_n", "is_even", "is_odd", "bit_length", "binary_popcount", "decimal_digit_count"],
+  "algorithm_release": "algos-0.0.1"
+}
