@@ -96,3 +96,7 @@ exactly twice: `compute` (by a contributor) and `verify` (by a maintainer).
 Add an algorithm by dropping a file in `properties/` (one method per file) with its
 metadata and test vectors, then open a pull request. See [INTERFACE.md](INTERFACE.md)
 for the method contract.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
