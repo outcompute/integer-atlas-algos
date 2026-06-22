@@ -1,13 +1,15 @@
 """Work-order loading and draft-manifest construction.
 
 A work order is the only input the executor interprets: {start, end, columns}
-(plus optional id / algorithm_release). The executor does not enforce project
-conventions on it.
+(plus optional id). The executor stamps the manifest's algorithm_release with its
+own package version (`algos-<__version__>`); any algorithm_release supplied in the
+work order is ignored, so the recorded version always reflects the code that ran.
 """
 import hashlib
 import os
 from datetime import datetime, timezone
 
+from integer_atlas_algos import __version__
 from integer_atlas_algos import properties  # noqa: F401  (importing registers every column method)
 from integer_atlas_algos.registry import get_methods
 
@@ -81,7 +83,7 @@ def draft_manifest(work_order, schema, methods, row_count, hashes, fmt, compress
         "format": fmt,
         "compression": compression,
         "hashes": hashes,
-        "algorithm_release": work_order.get("algorithm_release"),
+        "algorithm_release": f"algos-{__version__}",
         "generated_at_utc": now_utc(),
         "verification": {"status": "computed"},
     }
