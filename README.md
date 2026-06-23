@@ -97,6 +97,6 @@ Add an algorithm by dropping a file in `properties/` (one method per file) with 
 metadata and test vectors, then open a pull request. See [INTERFACE.md](INTERFACE.md)
 for the method contract.
 
-## License
+## License & citation
 
-MIT — see [LICENSE](LICENSE).
+Code: MIT — see [LICENSE](LICENSE). If you use Integer Atlas, please cite it — see [CITATION.cff](CITATION.cff).
